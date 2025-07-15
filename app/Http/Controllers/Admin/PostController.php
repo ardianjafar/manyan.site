@@ -24,7 +24,7 @@ class PostController extends Controller {
 
     public function store(Request $request)
     {
-        
+        $slug = Str::slug($request->title);
         
         $validated = $request->validate([
             'title' => 'required|max:255',
@@ -32,10 +32,9 @@ class PostController extends Controller {
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
             'metaTitle' => 'nullable|string|max:255',
-            'slug' => 'nullable|string|max:100',
+            'slug' => Str::slug($request->title),
             'image' => 'string',
             'summary' => 'nullable|string|max:100',
-            'publishedAt' => 'nullable|date',
             'published' => 'required|boolean',
         ]);
 
@@ -44,6 +43,7 @@ class PostController extends Controller {
             $validated['image'] = $imagePath;
         }
 
+        $validated['publishedAt'] = \Carbon\Carbon::now();
         $validated['authorId'] = auth()->id();
 
         $post = Post::create($validated);  // ← ini penting!
@@ -73,7 +73,7 @@ class PostController extends Controller {
             'categories.*' => 'exists:categories,id',
             'metaTitle' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:100',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image' => 'string',
             'summary' => 'nullable|string|max:100',
             'publishedAt' => 'nullable|date',
             'published' => 'required|in:0,1',
@@ -94,7 +94,7 @@ class PostController extends Controller {
     {
         $post->load('categories');
 
-        return view('posts.show', compact('post'));
+        return view('posts.show', compact('post'), ['page' => 'posts']);
     }
 
     public function destroy(Post $post)

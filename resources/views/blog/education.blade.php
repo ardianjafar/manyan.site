@@ -3,33 +3,63 @@
 @section('content')
 <div class="main-wrapper">
     <div class="container mt-2">
+    
         <div class="card shadow rounded">
             <div class="card-body">
                 <h3 class="card-title text-center fw-bold mb-2">📘 Vocabulary Table</h3>
                 {{-- Search and Filter --}}
                 <div class="row mb-2">
-                    <div class="col-md-6">
-                        <input type="text" id="searchInput" class="form-control" placeholder="🔍 Search word or example...">
-                    </div>
-                    <div class="col-md-3">
-                        <select id="sortSelect" class="form-select">
-                            <option value="">🔃 Sort By Word</option>
-                            <option value="asc">A - Z</option>
-                            <option value="desc">Z - A</option>
-                        </select>
-                    </div>
-                    <form method="GET" action="{{ route('blog.education') }}" class="row g-2 mb-2">
-                        <div class="col-md-3">
-                            <select name="level" class="form-select" onchange="this.form.submit()">
-                                <option value="">-- Filter by Level --</option>
-                                @foreach ($levels as $lvl)
-                                    <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>
-                                        {{ ucfirst($lvl) }}
-                                    </option>
-                                @endforeach
-                            </select>
+                    <div class="row mb-3 align-items-end">
+                        <div class="col-md-3 mb-1 mt-1">
+                            <input type="text" name="search" value="" class="form-control" placeholder="🔍 Search word or example...">
                         </div>
-                    </form>
+                        <div class="col-md-3 mb-1 mt-1">
+                            <a href="{{ route('posts.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm w-100">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-inline">
+                        <form method="GET" action="{{ route('blog.education') }}" class="row g-2 mb-3">
+                            <div class="col-md-3">
+                                <select name="category_id" class="form-select" onchange="this.form.submit()">
+                                    <option value="">-- Filter by Category --</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <select name="level" class="form-select" onchange="this.form.submit()">
+                                    <option value="">-- Filter by Level --</option>
+                                    @foreach ($levels as $lvl)
+                                        <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>
+                                            {{ ucfirst($lvl) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <select name="sort" class="form-select" onchange="this.form.submit()">
+                                    <option value="">-- Sort by Word --</option>
+                                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>A - Z</option>
+                                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Z - A</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 d-flex align-items-center">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="all" value="1" id="showAll"
+                                        onchange="this.form.submit()" {{ request('all') ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="showAll">Tampilkan Semua</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
     
                 {{-- Table --}}

@@ -21,9 +21,9 @@ class CategoryFactory extends Factory
         $name = $this->faker->unique()->word();
         return [
             'parentId' => null,
-            'title' => ucfirst($name),
-            'metaTitle' => ucfirst($name),
-            'slug' => Str::slug($name),
+            'title' => ucfirst($title),
+            'metaTitle' => ucfirst($metaTitle),
+            'slug' => Str::slug($slug),
             'content' => $this->faker->sentence(8),
             'created_at' => Carbon::now(),
 

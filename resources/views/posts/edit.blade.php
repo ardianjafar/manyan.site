@@ -27,10 +27,16 @@
             <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="title" class="form-label fw-bold">Post Title</label>
+                        <input type="text" name="title" id="title" class="form-control mb-3" value="{{ old('title', $post->title) }}" required>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="title" class="form-label fw-bold">Post Title</label>
-                    <input type="text" name="title" id="title" class="form-control mb-3" value="{{ old('title', $post->title) }}" required>
+                    <div class="col-md-6 mb-3">
+                        <label for="slug" class="form-label fw-bold">Slug (URL)</label>
+                        <input type="text" name="slug" id="slug" class="form-control mb-3" value="{{ old('slug', $post->slug) }}">
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -39,13 +45,9 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="slug" class="form-label fw-bold">Slug (URL)</label>
-                    <input type="text" name="slug" id="slug" class="form-control mb-3" value="{{ old('slug', $post->slug) }}">
-                </div>
-
-                <div class="mb-3">
                     <label for="content" class="form-label fw-bold">Post Content</label>
-                    <textarea name="content" id="content" class="form-control mb-3" rows="6" required>{{ old('content', $post->content) }}</textarea>
+                    <textarea name="content" id="content" class="form-control mb-3" rows="6" 
+                        required>{{ old('content', strip_tags($post->content ?? '')) }}</textarea>
                 </div>
 
                 <div class="mb-3">
@@ -75,11 +77,24 @@
 
                 <div class="mb-3">
                     <label for="image" class="form-label fw-bold">Post Image (Optional)</label>
-                    <input type="file" name="image" id="image" class="form-control mb-3">
-                    @if($post->image)
+
+                    <input type="text" name="image" id="thumbnail" class="filepond form-control mb-3">
+                    <span class="input-group-btn">
+                        <button id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                            <i class="fa fa-picture-o"></i> Choose
+                        </button>
+                    </span>
+
+                    <img id="holder" style="margin-top:15px;max-height:100px;">
+
+                    @if(isset($post) && $post->image)
                         <div class="mt-2">
                             <small>Current Image:</small><br>
-                            <img src="{{ Str::startsWith($post->image, ['http://', 'https://']) ? $post->image : asset('storage/' . $post->image) }}" alt="Post Image" style="max-width: 200px; border-radius: 4px;">
+                            <img 
+                                src="{{ Str::startsWith($post->image, ['http://', 'https://']) ? $post->image : asset('public/uploads/' . $post->image) }}" 
+                                alt="Post Image" 
+                                style="max-width: 200px; border-radius: 4px;"
+                            >
                         </div>
                     @endif
                 </div>

@@ -28,6 +28,7 @@ class EducationalWordController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
             'word_en' => 'required|string|max:255',
             'word_id' => 'required|string|max:255',
             'type' => 'required|in:noun,verb,adjective,adverb',

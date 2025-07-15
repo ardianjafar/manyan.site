@@ -40,7 +40,7 @@
                                         </td>
                                         <td>{{ $category->title }}</td>
                                         <td>{{ $category->metaTitle }}</td>
-                                        <td>{{ $category->content }}</td>
+                                        <td>{!! Str::limit($category->content,120) !!}</td>
                                         <td class="d-flex">
                                             <a href="{{ route('categories.show', $category->id) }}" class="btn btn-warning btn-sm mx-1">Detail</a>
                                             <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-primary btn-sm mx-1">Edit</a>

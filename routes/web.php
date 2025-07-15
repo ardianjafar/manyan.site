@@ -15,6 +15,8 @@ Route::get('/blog-post', [BlogController::class, 'blogs'])->name('blogs');
 Route::get('/blog-post/{id}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/education/eng-ind', [BlogController::class,'education'])->name('blog.education');
 
+// Download PDF
+Route::get('/posts/export/pdf', [BlogController::class, 'exportPdf'])->name('posts.export.pdf');
 
 Route::middleware('auth')->group(function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search');
@@ -49,4 +51,3 @@ Route::get('/vendor/laravel-filemanager/{path}', function ($path) {
 
 require __DIR__.'/auth.php';
 
-require __DIR__.'/auth.php';

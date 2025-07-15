@@ -10,6 +10,11 @@ class EducationalWord extends Model
     use HasFactory;
 
     protected $fillable = [
-        'word_en', 'word_id', 'type', 'example_en', 'example_id', 'level',
+        'category_id','word_en', 'word_id', 'type', 'example_en', 'example_id', 'level',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\EducationalWord;
+use App\Models\Category;
 use CyrildeWit\EloquentViewable\Contracts\Viewable;
+use Mpdf\Mpdf;
 
 
 class BlogController extends Controller
@@ -40,23 +42,68 @@ class BlogController extends Controller
 
     public function education(Request $request)
     {
-        $level = $request->query('level'); // ambil filter level dari URL
-
         $query = EducationalWord::query();
 
-        if ($level) {
-            $query->where('level', $level);
+        // Filter berdasarkan kategori jika ada
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
         }
 
-        $words = $query->get();
-        $words = $query->paginate(10);
+        // Filter berdasarkan level jika ada
+        if ($request->filled('level')) {
+            $query->where('level', $request->level);
+        }
 
-        // Ambil semua level unik dari DB untuk filter dropdown
+        // Urutkan berdasarkan kata jika ada parameter sort
+        if ($request->filled('sort')) {
+            $query->orderBy('word_en', $request->sort);
+        }
+
+        // Ambil data (semua atau paginate tergantung checkbox)
+        if ($request->has('all') && $request->all) {
+            // Batasi maksimal 200 record
+            $words = $query->limit(200)->paginate(200)->withQueryString();
+        } else {
+            $words = $query->paginate(10)->withQueryString();
+        }
+
+        // Untuk dropdown
         $levels = EducationalWord::select('level')->distinct()->pluck('level');
+        $categories = Category::all();
 
-        return view('blog.education', compact('words', 'level', 'levels'));
-    
+        return view('blog.education', compact('words', 'levels', 'categories'));
     }
+
+    public function exportPdf(Request $request)
+    {
+        $query = EducationalWord::query();
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('level')) {
+            $query->where('level', $request->level);
+        }
+
+        if ($request->filled('sort')) {
+            $query->orderBy('word_en', $request->sort);
+        }
+
+        $words = $request->has('all') && $request->all
+            ? $query->limit(200)->get()
+            : $query->paginate(10);
+
+        // Render ke view (tanpa layout)
+        $html = view('blog.export-pdf', compact('words'))->render();
+
+        // Buat PDF pakai MPDF
+        $mpdf = new Mpdf();
+        $mpdf->WriteHTML($html);
+        return response($mpdf->Output('words.pdf', \Mpdf\Output\Destination::STRING_RETURN))
+            ->header('Content-Type', 'application/pdf');
+    }
+
 
 }
 

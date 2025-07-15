@@ -12,6 +12,8 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "livewire/livewire": "^3.6",
+        "mpdf/mpdf": "^8.2",
         "unisharp/laravel-filemanager": "^2.10"
     },
     "require-dev": {

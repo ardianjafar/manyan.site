@@ -137,3 +137,24 @@ FilePond.registerPlugin(FilePondPluginImagePreview);
 <script>
   $('#lfm').filemanager('image');
 </script>
+
+
+{{-- Auto Generate Slug --}}
+<script>
+    function slugify(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')           // ganti spasi dengan dash
+            .replace(/[^\w\-]+/g, '')       // hapus karakter non-word
+            .replace(/\-\-+/g, '-');        // ganti multiple dash dengan satu
+    }
+
+    document.getElementById('title').addEventListener('input', function () {
+        const title = this.value;
+        const slug = slugify(title);
+        document.getElementById('slug').value = slug;
+    });
+</script>
+{{-- End of Auto Generate Slug --}}

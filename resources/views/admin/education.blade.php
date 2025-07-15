@@ -9,6 +9,52 @@
                 <p class="mb-4">Ini adalah tampilan dari halaman Edukasi</a>.</p>
 
                 <!-- DataTales Example -->
+                <!-- Filter Bar -->
+                <form method="GET" action="{{ route('educational-words.index') }}" class="mb-4">
+                    <div class="row align-items-end gx-2">
+                        <div class="col-md-3">
+                            <input type="text" name="search" class="form-control" placeholder="🔍 Search word or example..." value="{{ request('search') }}">
+                        </div>
+
+                        <div class="col-md-3">
+                            <select name="category_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">-- Filter by Category --</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->title }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <select name="level" class="form-select" onchange="this.form.submit()">
+                                <option value="">-- Filter by Level --</option>
+                                @foreach ($levels as $lvl)
+                                    <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>
+                                        {{ ucfirst($lvl) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <select name="sort" class="form-select" onchange="this.form.submit()">
+                                <option value="">-- Sort by Word --</option>
+                                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>A - Z</option>
+                                <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Z - A</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2 d-flex align-items-center">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="all" id="showAll" value="1" onchange="this.form.submit()" {{ request('all') ? 'checked' : '' }}>
+                                <label for="showAll" class="form-check-label">Tampilkan Semua</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <a href="{{ route('educational-words.create') }}" class="btn btn-primary btn-sm">+ Add Edukasi</a>

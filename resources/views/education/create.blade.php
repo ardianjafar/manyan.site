@@ -19,7 +19,17 @@
 
     <form method="POST" action="{{ route('educational-words.store') }}">
         @csrf
-
+        <div class="form-group">
+            <label for="category_id">Category Word</label>
+            <select name="category_id" id="category_id" class="form-control" required>
+            <option value="" disabled selected>Pilih kategori</option>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                {{ $category->title }}
+            </option>
+            @endforeach
+        </select>
+        </div>
         <div class="form-group">
             <label for="word_en">English Word</label>
             <input type="text" class="form-control" id="word_en" name="word_en" required value="{{ old('word_en') }}">
@@ -30,14 +40,34 @@
             <input type="text" class="form-control" id="word_id" name="word_id" required value="{{ old('word_id') }}">
         </div>
 
-        <div class="form-group">
-            <label for="type">Type</label>
-            <select class="form-control" id="type" name="type" required>
-                <option value="" disabled selected>Pilih jenis kata</option>
-                @foreach(['noun', 'verb', 'adjective', 'adverb'] as $t)
-                    <option value="{{ $t }}" {{ old('type') == $t ? 'selected' : '' }}>{{ ucfirst($t) }}</option>
-                @endforeach
-            </select>
+         <div class="row">
+            {{-- Type --}}
+            <div class="col-md-6 form-group">
+                <label for="type">Type</label>
+                <select class="form-control" id="type" name="type" required>
+                    <option value="" disabled selected>Pilih jenis kata</option>
+                    @foreach(['noun', 'verb', 'adjective', 'adverb'] as $t)
+                        <option value="{{ $t }}" 
+                            {{ old('type', isset($words) ? $words->type : '') == $t ? 'selected' : '' }}>
+                            {{ ucfirst($t) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Level --}}
+            <div class="col-md-6 form-group">
+                <label for="level">Level</label>
+                <select class="form-control" id="level" name="level" required>
+                    <option value="" disabled selected>Pilih level</option>
+                    @foreach(['beginner', 'intermediate', 'advanced'] as $l)
+                        <option value="{{ $l }}" 
+                            {{ old('level', isset($words) ? $words->level : '') == $l ? 'selected' : '' }}>
+                            {{ ucfirst($l) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
         <div class="form-group">
@@ -50,15 +80,7 @@
             <textarea class="form-control" id="example_id" name="example_id">{{ old('example_id') }}</textarea>
         </div>
 
-        <div class="form-group">
-            <label for="level">Level</label>
-            <select class="form-control" id="level" name="level">
-                <option value="" disabled selected>Pilih level</option>
-                @foreach(['beginner', 'intermediate', 'advanced'] as $l)
-                    <option value="{{ $l }}" {{ old('level') == $l ? 'selected' : '' }}>{{ ucfirst($l) }}</option>
-                @endforeach
-            </select>
-        </div>
+        
 
         <button type="submit" class="btn btn-primary">Simpan</button>
     </form>

@@ -37,7 +37,7 @@
 							<div class="col mx-2">
 								<h3 class="title mb-1"><a class="text-link" href="{{  route('blog.show', $post->id) }}">{{ $post->title }} </a></h3>
 								<div class="meta mb-1"><span class="date">Published {{ $post->publishedAt ? $post->publishedAt->diffForHumans() : 'N/A' }}</span><span class="time">5 min read</span><span class="comment"><a class="text-link" href="#">8 comments</a></span></div>
-								<div class="intro">{{ Str::limit($post->content, 120) }}</div>
+								<div class="intro">{!! Str::limit($post->content, 120) !!}</div>
 								<a class="text-link" href="{{  route('blog.show', $post->id) }}">Read more &rarr;</a>
 							</div><!--//col-->
 						</div><!--//row-->

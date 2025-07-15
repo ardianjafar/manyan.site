@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Category;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Education>
@@ -29,12 +30,13 @@ class EducationalWordFactory extends Factory
         $pair = fake()->randomElement($wordPairs);
 
         return [
-            'word_en'    => $pair[0],
-            'word_id'    => $pair[1],
-            'type'       => fake()->randomElement(['noun', 'verb', 'adjective', 'adverb']), // ✅ sesuai enum
-            'example_en' => fake()->sentence(),
-            'example_id' => fake()->sentence(),
-            'level'      => fake()->randomElement(['beginner', 'intermediate', 'advanced']), // ✅ sesuai enum
+            'word_en' => $this->faker->unique()->word(),
+            'word_id' => $this->faker->word(),
+            'type' => $this->faker->randomElement(['noun', 'verb', 'adjective', 'adverb']),
+            'example_en' => $this->faker->sentence(),
+            'example_id' => $this->faker->sentence(),
+            'level' => $this->faker->randomElement(['beginner', 'intermediate', 'advanced']),
+            'category_id' => Category::inRandomOrder()->first()->id ?? Category::factory(), // aman fallback
         ];
     }
 }

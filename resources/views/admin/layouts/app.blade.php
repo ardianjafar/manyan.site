@@ -23,6 +23,10 @@
     <!-- Custom styles for this page -->
     <link href="{{ asset('assets/admins/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
+    {{-- Css for filter --}}
+    <!-- Bootstrap 5 CSS -->
+    {{-- Belum ada, itu carikan --}}
+
     <!-- Select CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     
@@ -146,7 +150,10 @@
         </div>
     </div>
 </body data-page="{{ $page }}">
-
+    {{-- Bootstrap for filter --}}
+    <!-- Bootstrap 5 JS (Popper.js included) -->
+    {{-- Belum ada untuk itu carikan  --}}
+    
     <!-- Bootstrap core JavaScript-->
     <script src="{{asset('assets/admins/vendor/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('assets/admins/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
