@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EducationalWordController;
+use App\Http\Controllers\EnglishVocabController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('educational-words')->group(function () {
-    Route::get('/', [EducationalWordController::class, 'index']);
-    Route::get('/{id}', [EducationalWordController::class, 'show']);
-    Route::post('/', [EducationalWordController::class, 'store']);
+    Route::get('/', [EnglishVocabController::class, 'index']);
+    Route::get('/{id}', [EnglishVocabController::class, 'show']);
+    Route::post('/', [EnglishVocabController::class, 'store']);
 });

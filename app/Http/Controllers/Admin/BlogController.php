@@ -15,28 +15,43 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = Post::where('published', true)->orderBy('publishedAt', 'desc')->paginate(6);
+       $posts = Post::where('published', true)
+        ->orderBy('pinned', 'desc')    // pinned first!
+        ->orderBy('publishedAt', 'desc')
+        ->paginate(10);                // gunakan jumlah sesuai kebutuhan
+
         return view('blog.index', compact('posts'));
+        return view('blog.index', [
+            'posts' => $posts,
+            'metaTitle' => $post->metaTitle ?? $post->title,
+            'metaDescription' => $post->summary ?? Str::limit(strip_tags($post->content), 160),
+        ]);
     }
 
     public function about()
     {
         return view('blog.about-me');
     }
+    
 
-    public function show($id)
+    public function show($slug)
     {
-        $post = Post::with('categories', 'author')->where('id', $id)->firstOrFail();   // Securely find the post or throw 404
+        $post = Post::with('categories', 'author')->where('slug', $slug)->firstOrFail();   // Securely find the post or throw 404
         views($post)->record();
 
-        // Ambil related post (berdasarkan kategori yang sama dan id berbeda)
-        $relatedPosts = Post::where('id', '!=', $post->id)
+        // Ambil related post (berdasarkan kategori yang sama dan slug berbeda)
+        $relatedPosts = Post::where('slug', '!=', $post->slug)
             ->where('published', true)
             ->orderBy('publishedAt', 'desc')
             ->limit(3)
             ->get();
 
-        return view('blog.blog-post', compact('post', 'relatedPosts'));
+        return view('blog.blog-post', [
+            'post' => $post,
+            'relatedPosts' => $relatedPosts,
+            'metaTitle' => $post->metaTitle ?? $post->title,
+            'metaDescription' => $post->summary ?? Str::limit(strip_tags($post->content), 160),
+        ]);
 
     }
 
@@ -64,7 +79,7 @@ class BlogController extends Controller
             // Batasi maksimal 200 record
             $words = $query->limit(200)->paginate(200)->withQueryString();
         } else {
-            $words = $query->paginate(10)->withQueryString();
+            $words = $query->paginate(25)->withQueryString();
         }
 
         // Untuk dropdown
@@ -92,7 +107,7 @@ class BlogController extends Controller
 
         $words = $request->has('all') && $request->all
             ? $query->limit(200)->get()
-            : $query->paginate(10);
+            : $query->paginate(20);
 
         // Render ke view (tanpa layout)
         $html = view('blog.export-pdf', compact('words'))->render();
@@ -101,7 +116,8 @@ class BlogController extends Controller
         $mpdf = new Mpdf();
         $mpdf->WriteHTML($html);
         return response($mpdf->Output('words.pdf', \Mpdf\Output\Destination::STRING_RETURN))
-            ->header('Content-Type', 'application/pdf');
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="words.pdf"');
     }
 
 

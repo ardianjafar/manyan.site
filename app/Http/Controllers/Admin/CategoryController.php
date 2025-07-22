@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 class CategoryController extends Controller
 {
     // Display list of categories
@@ -24,20 +25,11 @@ class CategoryController extends Controller
     }
 
     // Store new category
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $validated = $request->validate([
-            'parentId' => 'nullable|exists:categories,id',
-            'title' => 'required|string|max:75',
-            'metaTitle' => 'nullable|string|max:100',
-            'slug' => 'nullable|string|max:100',
-            'content' => 'nullable|string',
-        ]);
-
+        $validated = $request->validated();
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
-
         Category::create($validated);
-
         return redirect()->route('categories.index')
                          ->with('success', 'Category created successfully.');
     }
@@ -56,20 +48,11 @@ class CategoryController extends Controller
     }
 
     // Update category
-    public function update(Request $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $validated = $request->validate([
-            'parentId' => 'nullable|exists:categories,id',
-            'title' => 'required|string|max:75',
-            'metaTitle' => 'nullable|string|max:100',
-            'slug' => 'nullable|string|max:100',
-            'content' => 'nullable|string',
-        ]);
-
+        $validated = $request->validated();
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
-
         $category->update($validated);
-
         return redirect()->route('categories.index')
                          ->with('success', 'Category updated successfully.');
     }

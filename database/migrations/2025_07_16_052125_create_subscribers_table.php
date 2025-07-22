@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_tag', function (Blueprint $table) {
-            $table->foreignId('postId')->constrained('posts')->onDelete('cascade');
-            $table->foreignId('tagId')->constrained('tags')->onDelete('cascade');
-            $table->primary(['postId', 'tagId']);
+        Schema::create('subscribers', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();
+            $table->timestamps();
         });
-        
     }
 
     /**
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('subscribers');
     }
 };

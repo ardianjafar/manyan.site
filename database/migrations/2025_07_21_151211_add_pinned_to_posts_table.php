@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tags', function (Blueprint $table) {
-            $table->id();
-            $table->string('title', 75);
-            $table->string('metaTitle', 100)->nullable();
-            $table->string('slug', 100)->unique();
-            $table->text('content')->nullable();
-            $table->timestamps();
+        Schema::table('posts', function (Blueprint $table) {
+              $table->boolean('pinned')->default(false)->after('published');
         });
-        
     }
 
     /**
@@ -27,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('posts', function (Blueprint $table) {
+             $table->dropColumn('pinned');
+        });
     }
 };

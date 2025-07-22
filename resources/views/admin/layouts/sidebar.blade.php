@@ -37,7 +37,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('tags.index')}}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Tags</span></a>
     </li>
@@ -60,8 +60,8 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Language</h6>
-                <a class="collapse-item" href="{{ route('educational-words.index') }}">Vocab</a>
-                <a class="collapse-item" href="register.html">Advance</a>
+                <a class="collapse-item" href="{{ route('vocabs.index') }}">Vocab English</a>
+                <a class="collapse-item" href="{{ route('vocabs-chn.index')}}">Vocab Chinese</a>
                 <div class="collapse-divider"></div>
             </div>
         </div>

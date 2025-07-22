@@ -27,7 +27,7 @@
 					    <a class="nav-link active" href="{{ route('home')}}"><i class="fas fa-home fa-fw me-2"></i>Blog Home <span class="sr-only">(current)</span></a>
 					</li>
 					<li class="nav-item">
-					    <a class="nav-link" href="#"><i class="fas fa-bookmark fa-fw me-2"></i>Blog Post</a>
+					    <a class="nav-link" href="{{ route('home')}}"><i class="fas fa-bookmark fa-fw me-2"></i>Blog Post</a>
 					</li>
 					<li class="nav-item">
 					    <a class="nav-link" href="{{ route('about-me') }}"><i class="fas fa-user fa-fw me-2"></i>About Me</a>

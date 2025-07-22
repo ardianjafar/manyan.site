@@ -74,25 +74,62 @@ document.addEventListener('DOMContentLoaded', function () {
         formId: 'bulk-delete-form',
         idsInputId: 'bulk-category-ids'
     });
+    
+    // Config for Educational Words Englis
+    setupBulkDelete({
+        selectAllId: 'select-all',
+        checkboxClass: '.education-eng-checkbox',
+        deleteBtnId: 'bulk-delete-btn',
+        formId: 'bulk-delete-form',
+        idsInputId: 'bulk-educational-eng'
+    });
+    
+    // Config for Educational Words Chinese
+    setupBulkDelete({
+        selectAllId: 'select-all',
+        checkboxClass: '.education-chn-checkbox',
+        deleteBtnId: 'bulk-delete-btn',
+        formId: 'bulk-delete-form',
+        idsInputId: 'bulk-educational-chn'
+    });
+
+    setupBulkDelete({
+        selectAllId: 'select-all',
+        checkboxClass: '.tags-checkbox',
+        deleteBtnId: 'bulk-delete-btn',
+        formId: 'bulk-delete-form',
+        idsInputId: 'bulk-tags'
+    });
 });
 </script>
 
-
+<script src="https://cdn.tiny.cloud/1/kitv73e9h5zb8gst8pzfsqvpne0obj8b5ci0fzb1w6xef6tj/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+      tinymce.init({
+        selector: '#editor'
+      });
+</script>
 {{-- Enkd Bulk Delete Post --}}
 
-<script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+{{-- <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
 
 <script>
-ClassicEditor
-    .create(document.querySelector('#editor'), {
-        ckfinder: {
-            uploadUrl: '/laravel-filemanager/upload?type=Images&_token={{ csrf_token() }}'
+ClassicEditor.create(document.querySelector('#editor'), {
+    ckfinder: {
+        uploadUrl: '/laravel-filemanager/upload?type=Images&_token={{ csrf_token() }}'
+    },
+    simpleUpload: {
+        uploadUrl: '/laravel-filemanager/upload?type=Images&_token={{ csrf_token() }}',
+        withCredentials: false,
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
         }
-    })
-    .catch(error => {
-        console.error(error);
-    });
-</script>
+    }
+})
+.catch(error => {
+    console.error(error);
+});
+</script>   --}}
 
 {{-- Categories Select --}}
 <script>
@@ -102,6 +139,20 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     $('#categories').select2({
+        placeholder: 'Select Categories...',
+        allowClear: true,
+        width: '100%'   // Biar full width dan tidak aneh
+    });
+});
+</script>
+{{-- Tags Select --}}
+<script>
+$(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+});
+
+$(document).ready(function() {
+    $('#tags').select2({
         placeholder: 'Select Categories...',
         allowClear: true,
         width: '100%'   // Biar full width dan tidak aneh

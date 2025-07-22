@@ -37,21 +37,30 @@
                     {!! ($post->content) !!}
                 </p>
             </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <strong>Categories:</strong>
+                    @forelse($post->categories as $category)
+                        <span class="badge bg-danger text-white">{{ $category->title }}</span>
+                    @empty
+                        <span class="text-muted">No Categories</span>
+                    @endforelse
+                </div>
+                <div class="col-md-4 mb-3">
+                    <strong>Tag:</strong>
+                    @forelse($post->tags as $tag)
+                        <span class="badge bg-danger text-white">{{ $tag->name }}</span>
+                    @empty
+                        <span class="text-muted">No Tag</span>
+                    @endforelse
+                </div>
 
-            <div class="mb-3">
-                <strong>Categories:</strong>
-                @forelse($post->categories as $category)
-                    <span class="badge bg-danger text-white">{{ $category->title }}</span>
-                @empty
-                    <span class="text-muted">No Categories</span>
-                @endforelse
-            </div>
-
-            <div class="d-flex align-items-center gap-2 ">
-                <strong>Status:</strong>
-                <span class="badge {{ $post->published ? 'bg-success' : 'bg-secondary' }}">
-                    {{ $post->published ? ' Published' : ' Draft' }}
-                </span>
+                <div class="col-md-4 d-flex align-items-center gap-2 ">
+                    <strong>Status:</strong>
+                    <span class="badge {{ $post->published ? 'bg-success' : 'bg-secondary' }}">
+                        {{ $post->published ? ' Published' : ' Draft' }}
+                    </span>
+                </div>
             </div>
 
             <div class="mt-4">

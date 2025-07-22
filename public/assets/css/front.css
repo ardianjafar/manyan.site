@@ -1,0 +1,27 @@
+.blog-card {
+    border-radius: 1.2rem;
+    overflow: hidden;
+    background: #fff;
+    transition: box-shadow 0.3s;
+    border: none;
+}
+.blog-card:hover {
+    box-shadow: 0 4px 20px rgba(30, 108, 153, 0.08), 0 1.5px 8px rgba(50,50,93,.05);
+}
+.blog-card img {
+    border-radius: 1.2rem 0 0 1.2rem;
+}
+.card {
+    transition: box-shadow 0.2s;
+}
+.card:hover {
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,1.19);
+    transform: translateY(-2px);
+}
+.card-title a:hover {
+    color: #cb973f; /* gold, atau warna branding kamu */
+}
+.btn-outline-dark {
+    border-width: 2px;
+}
+

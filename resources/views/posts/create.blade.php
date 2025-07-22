@@ -45,22 +45,34 @@
 
 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="publishedAt" class="form-label fw-bold">Publish Date (Optional)</label>
                 <input type="date" name="publishedAt" id="published" class="form-control mb-3" value="{{ old('publishedAt') }}">
             </div>
     
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="published" class="form-label fw-bold">Post Status</label>
                 <select name="published" id="published" class="form-control">
                     <option value="1" {{ old('published') == '1' ? 'selected' : '' }}>Published</option>
                     <option value="0" {{ old('published') == '0' ? 'selected' : '' }}>Draft</option>
                 </select>
             </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="tags" class="form-label fw-bold">Select Tags</label>
+                <select name="tags[]" id="tags" class="form-control js-example-basic-multiple" multiple placeholder="Select Tags">
+                    @foreach($tags as $tag)
+                        <option value="{{ $tag->id }}">
+                            {{ (collect(old('tags', isset($post) ? $post->tags->pluck('id') : []))->contains($tag->id)) ? 'selected' : '' }}
+                            {{ $tag->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="categories" class="form-label fw-bold">Select Categories</label>
                 <select name="categories[]" id="categories" class="form-control js-example-basic-multiple" multiple placeholder="Select Categories">
                     @foreach($categories as $category)
@@ -71,8 +83,7 @@
                     @endforeach
                 </select>
             </div>
-
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="image" class="form-label fw-bold">Post Image (Optional)</label>
                 <div class="input-group">
                     <input type="text" name="image" id="thumbnail" class="filepond form-control mb-3">
@@ -84,9 +95,17 @@
                     <img id="holder" style="margin-top:15px;max-height:100px;">
                 </div>
             </div>
+            <div class="col-md-4 mb-3">
+                <label for="pinned" class="form-label fw-bold">Pin this Post</label>
+                <div class="input-group">
+                    <input type="checkbox" name="pinned" id="pinned" value="1"
+                        {{ old('pinned', $post->pinned ?? false) ? 'checked' : '' }}>
+                    <span class="text-muted">Tampilkan artikel ini di urutan teratas</span>
+                </div>
+            </div>
         </div>
-                <button type="submit" class="btn btn-primary">Publish</button>
-                <a href="{{ route('posts.index') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Publish</button>
+        <a href="{{ route('posts.index') }}" class="btn btn-secondary">Cancel</a>
 
     
     </form>

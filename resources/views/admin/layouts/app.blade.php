@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Manyan | Blog</title>
+    <title>Manyan | @yield('title')</title>
 
     <!-- Custom fonts for this template -->
     <link href="{{  asset('assets/admins/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">

@@ -5,52 +5,61 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Models\Subscriber;
+use App\Mail\NewPostNotification;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 
 class PostController extends Controller {
+
     public function index()
     {
         $posts = Post::with('author')->latest()->get();
-        return view('admin.index', compact('posts'), ['page' => "posts"]);
+        return view('admin.index', [
+            'posts' => $posts,
+            'page' => "posts"
+        ]);
     }
 
     public function create()
     {
         $categories = Category::all(); // or where('parentId', null) if needed
-        return view('posts.create', compact('categories'), ['page' => 'posts']);
+        $tags = Tag::all(); // or where('parentId', null) if needed
+        return view('posts.create', [
+            'categories' => $categories,
+            'page' => 'posts',
+            'tags' => $tags
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $slug = Str::slug($request->title);
-        
-        $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'categories' => 'array',
-            'categories.*' => 'exists:categories,id',
-            'metaTitle' => 'nullable|string|max:255',
-            'slug' => Str::slug($request->title),
-            'image' => 'string',
-            'summary' => 'nullable|string|max:100',
-            'published' => 'required|boolean',
-        ]);
+        $validated = $request->validated();
 
+        $validated['pinned'] = $request->has('pinned') ? 1 : 0;
+        $validated['publishedAt'] = \Carbon\Carbon::now();
+        $validated['authorId'] = auth()->id();
+        
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('posts', 'public');
             $validated['image'] = $imagePath;
         }
 
-        $validated['publishedAt'] = \Carbon\Carbon::now();
-        $validated['authorId'] = auth()->id();
-
         $post = Post::create($validated);  // ← ini penting!
 
         $post->categories()->attach($request->input('categories', []));
-
+        $post->tags()->attach($request->input('tags', []));
+        
+        foreach(Subscriber::all() as $subscriber) {
+            Mail::to($subscriber->email)->queue(new NewPostNotification($post));
+        }
         return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+        
     }
 
 
@@ -58,34 +67,36 @@ class PostController extends Controller {
     {
         $post = Post::findOrFail($id);
         $categories = Category::all();
+        $tags = Tag::all();
         $postCategories = $post->categories->pluck('id')->toArray();
 
-        return view('posts.edit', compact('post', 'categories', 'postCategories'), ['page' => 'posts']);
+        return view('posts.edit', [
+            'post' => $post,
+            'categories' => $categories,
+            'tags' => $tags,
+            'postCategories' => $postCategories,
+            'page' => 'posts'
+        ]);
     }
 
    
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'categories' => 'array',
-            'categories.*' => 'exists:categories,id',
-            'metaTitle' => 'nullable|string|max:255',
-            'slug' => 'nullable|string|max:100',
-            'image' => 'string',
-            'summary' => 'nullable|string|max:100',
-            'publishedAt' => 'nullable|date',
-            'published' => 'required|in:0,1',
-        ]);
+        $pinnedValue = $request->has('pinned') ? 1 : 0;
+         $validated = $request->validated();
+
+        if (empty($validated['image'])) {
+            $validated['image'] = $post->image;
+        }
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('posts', 'public');
             $validated['image'] = $imagePath;
         }
-
+        $validated['pinned'] = $pinnedValue;
         $post->update($validated);
         $post->categories()->sync($request->input('categories', []));
+        $post->tags()->sync($request->input('tags', []));
         return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
     }
 

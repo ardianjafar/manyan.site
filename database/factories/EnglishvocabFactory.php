@@ -8,7 +8,7 @@ use App\Models\Category;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Education>
  */
-class EducationalWordFactory extends Factory
+class EnglishvocabFactory extends Factory
 {
     /**
      * Define the model's default state.

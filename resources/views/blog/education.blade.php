@@ -1,19 +1,18 @@
-'@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 <div class="main-wrapper">
-    <div class="container mt-2">
-    
+    <div class="mt-2">
         <div class="card shadow rounded">
             <div class="card-body">
                 <h3 class="card-title text-center fw-bold mb-2">📘 Vocabulary Table</h3>
                 {{-- Search and Filter --}}
                 <div class="row mb-2">
                     <div class="row mb-3 align-items-end">
-                        <div class="col-md-3 mb-1 mt-1">
+                        <div class="col-md-6 mb-1 mt-1">
                             <input type="text" name="search" value="" class="form-control" placeholder="🔍 Search word or example...">
                         </div>
-                        <div class="col-md-3 mb-1 mt-1">
+                        <div class="col-md-6 mb-1 mt-1">
                             <a href="{{ route('posts.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm w-100">
                                 <i class="fas fa-file-pdf"></i> Export PDF
                             </a>
@@ -105,33 +104,53 @@
                     <ul class="pagination pagination-rounded mb-0">
                         {{-- Previous Page Link --}}
                         @if ($words->onFirstPage())
-                            <li class="page-item disabled">
-                                <span class="page-link">&laquo;</span>
-                            </li>
+                            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
                         @else
                             <li class="page-item">
                                 <a class="page-link" href="{{ $words->previousPageUrl() }}" rel="prev">&laquo;</a>
                             </li>
                         @endif
-    
-                        {{-- Pagination Links (Auto-generated) --}}
-                        @foreach ($words->getUrlRange(1, $words->lastPage()) as $page => $url)
-                            @if ($page == $words->currentPage())
-                                <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
-                            @else
-                                <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+
+                        {{-- Pagination Number Links --}}
+                        @php
+                            $currentPage = $words->currentPage();
+                            $lastPage = $words->lastPage();
+                            $start = max(1, $currentPage - 2);
+                            $end = min($lastPage, $currentPage + 2);
+                        @endphp
+
+                        {{-- Show first page --}}
+                        @if ($start > 1)
+                            <li class="page-item"><a class="page-link" href="{{ $words->url(1) }}">1</a></li>
+                            @if ($start > 2)
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
                             @endif
-                        @endforeach
-    
+                        @endif
+
+                        {{-- Main pagination loop --}}
+                        @for ($i = $start; $i <= $end; $i++)
+                            @if ($i == $currentPage)
+                                <li class="page-item active"><span class="page-link">{{ $i }}</span></li>
+                            @else
+                                <li class="page-item"><a class="page-link" href="{{ $words->url($i) }}">{{ $i }}</a></li>
+                            @endif
+                        @endfor
+
+                        {{-- Show last page --}}
+                        @if ($end < $lastPage)
+                            @if ($end < $lastPage - 1)
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            @endif
+                            <li class="page-item"><a class="page-link" href="{{ $words->url($lastPage) }}">{{ $lastPage }}</a></li>
+                        @endif
+
                         {{-- Next Page Link --}}
                         @if ($words->hasMorePages())
                             <li class="page-item">
                                 <a class="page-link" href="{{ $words->nextPageUrl() }}" rel="next">&raquo;</a>
                             </li>
                         @else
-                            <li class="page-item disabled">
-                                <span class="page-link">&raquo;</span>
-                            </li>
+                            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
                         @endif
                     </ul>
                 </nav>

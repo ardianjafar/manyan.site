@@ -13,7 +13,10 @@
 
 					<header class="blog-post-header">
 						<h2 class="title mb-2">{{ $post->title }}</h2>
-						<div class="meta mb-3"><span class="date">Published {{ $post->publishedAt ? $post->publishedAt->diffForHumans() : 'N/A' }}</span><span class="time">5 min read</span><span class="comment"><a  class="text-link" href="#">4 comments</a></span></div>
+						<div class="meta mb-3">
+							<span class="date">Published {{ $post->publishedAt ? $post->publishedAt->diffForHumans() : 'N/A' }}</span>
+							<span class="time">{{ $post->readingTime() }} min read</span><span class="comment">
+							<a  class="text-link" href="#">4 comments</a></span></div>
 					</header>
 
 					<div class="my-3 border-top border-bottom py-2 d-flex align-items-center flex-wrap">
@@ -51,13 +54,13 @@
 					@forelse($relatedPosts as $related)
 					<div class="col-md-4 mb-3">
 						<div class="card h-100 shadow-sm border-0">
-						<img src="{{ asset('storage/' . $related->image) }}" class="card-img-top" alt="{{ $related->title }}">
+						<img src="{{ Str::startsWith($related->image, ['http://', 'https://']) ? $post->image : asset('storage/' . $related->image) }}" class="card-img-top" alt="{{ $related->title }}">
 						<div class="card-body">
 							<h6 class="card-title fw-semibold">{{ Str::limit($related->title, 60) }}</h6>
 							<p class="card-text small text-muted">
 							{{ Str::limit(strip_tags($related->content), 90) }}
 							</p>
-							<a href="{{ route('blog.show', $related->id) }}" class="text-success small fw-bold">Read More</a>
+							<a href="{{ route('blog.show', $related->slug) }}" class="text-success small fw-bold">Read More</a>
 						</div>
 						</div>
 					</div>
@@ -69,7 +72,6 @@
 
 		    </div><!--//container-->
 	    </article>
-	   
 		
     </div><!--//main-wrapper-->
 

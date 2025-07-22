@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('educational_words', function (Blueprint $table) {
+        Schema::create('vocabularies_mandarin', function (Blueprint $table) {
             $table->id();
-            $table->string('word_en');
-            $table->string('word_id');
-            $table->enum('type', ['noun', 'verb', 'adjective', 'adverb']);
-            $table->text('example_en')->nullable();
+            $table->string('hanzi');
+            $table->string('pinyin');
+            $table->string('meaning');
+            $table->enum('type', ['noun','verb','adverb','conjunction','preposition','measure','particle','determiner']);
+            $table->text('example_cn')->nullable();
             $table->text('example_id')->nullable();
             $table->enum('level', ['beginner', 'intermediate', 'advanced'])->nullable();
             $table->timestamps();
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('educational_words');
+        Schema::dropIfExists('vocabularies_mandarin');
     }
 };
